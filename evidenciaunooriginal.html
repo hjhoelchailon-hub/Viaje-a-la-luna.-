@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viaje a la Luna - Las 4 Fases Lunares</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: radial-gradient(ellipse at center, #1a0033 0%, #000000 100%);
+            color: #FFE66D;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        .space-background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, #FFE66D, transparent),
+                radial-gradient(2px 2px at 60% 70%, #FFE66D, transparent),
+                radial-gradient(1px 1px at 50% 50%, #FFE66D, transparent),
+                radial-gradient(1px 1px at 80% 10%, #FFE66D, transparent),
+                radial-gradient(2px 2px at 90% 60%, #FFE66D, transparent),
+                radial-gradient(1px 1px at 33% 80%, #FFE66D, transparent),
+                radial-gradient(2px 2px at 15% 90%, #FFE66D, transparent);
+            background-size: 200% 200%;
+            animation: stars 120s linear infinite;
+        }
+
+        @keyframes stars {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .space-objects {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(1px);
+        }
+
+        .planet1 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #8b0000);
+            top: 10%;
+            right: 5%;
+            box-shadow: 0 0 60px rgba(255, 107, 107, 0.5);
+        }
+
+        .planet2 {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #4ecdc4, #1a535c);
+            bottom: 15%;
+            left: 8%;
+            box-shadow: 0 0 40px rgba(78, 205, 196, 0.5);
+        }
+
+        .nebula {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%);
+            top: 30%;
+            right: 20%;
+            filter: blur(60px);
+            animation: nebulaPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes nebulaPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 30px 150px 30px;
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .slide {
+            display: none;
+            animation: slideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            flex: 1;
+            padding-bottom: 80px;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.9) translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 5em;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #FFE66D, #FFF9A6, #FFD700, #FFED4E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(255, 230, 109, 0.8));
+            animation: titleGlow 3s ease-in-out infinite;
+            font-weight: bold;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 30px rgba(255, 230, 109, 0.8)); }
+            50% { filter: drop-shadow(0 0 50px rgba(255, 230, 109, 1)); }
+        }
+
+        h2 {
+            font-size: 3.5em;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #FFE66D;
+            text-shadow: 0 0 20px rgba(255, 230, 109, 0.8),
+                         0 0 40px rgba(255, 230, 109, 0.5);
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #FFF9A6;
+            text-shadow: 0 0 10px rgba(255, 249, 166, 0.8);
+        }
+
+        .moon-3d {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            border-radius: 50%;
+            position: relative;
+            background: radial-gradient(circle at 35% 35%, #FFE66D, #D4AF37);
+            box-shadow: 
+                inset -20px -20px 50px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(255, 230, 109, 0.9),
+                0 0 120px rgba(255, 230, 109, 0.6),
+                0 0 160px rgba(255, 230, 109, 0.3);
+            animation: moonFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes moonFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+            50% { 
+                transform: translateY(-25px) rotate(-2deg) scale(1.05);
+            }
+            75% {
+                transform: translateY(-15px) rotate(1deg) scale(1.02);
+            }
+        }
+
+        .moon-3d::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(180, 150, 80, 0.6) 0%, transparent 8%),
+                radial-gradient(circle at 70% 30%, rgba(170, 140, 70, 0.5) 0%, transparent 6%),
+                radial-gradient(circle at 50% 70%, rgba(185, 155, 85, 0.6) 0%, transparent 10%),
+                radial-gradient(circle at 80% 60%, rgba(160, 130, 60, 0.5) 0%, transparent 5%),
+                radial-gradient(circle at 20% 80%, rgba(175, 145, 75, 0.4) 0%, transparent 7%);
+        }
+
+        .moon-3d::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 50%);
+            animation: moonShine 3s ease-in-out infinite;
+        }
+
+        @keyframes moonShine {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .moon-phase-container {
+            perspective: 1500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 60px 0;
+            min-height: 400px;
+        }
+
+        .moon-nueva {
+            background: radial-gradient(circle at 50% 50%, #2a2a2a, #0a0a0a);
+            box-shadow: 
+                inset 0 0 60px rgba(0, 0, 0, 0.9),
+                0 0 40px rgba(100, 100, 100, 0.4),
+                0 0 80px rgba(100, 100, 100, 0.2);
+            animation: moonNewFloat 5s ease-in-out infinite;
+        }
+
+        @keyframes moonNewFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1);
+            }
+            50% { 
+                transform: translateY(-20px) scale(1.03);
+            }
+        }
+
+        .moon-nueva::before {
+            background: none;
+        }
+
+        .moon-nueva::after {
+            background: radial-gradient(circle at 30% 30%, rgba(80, 80, 80, 0.2), transparent 50%);
+        }
+
+        .moon-cuarto-creciente {
+            background: linear-gradient(90deg, 
+                #1a1a1a 0%, 
+                #1a1a1a 50%, 
+                #FFE66D 50%, 
+                #D4AF37 100%);
+            box-shadow: 
+                inset -30px 0 60px rgba(0, 0, 0, 0.6),
+                0 0 80px rgba(255, 230, 109, 0.8),
+                0 0 120px rgba(255, 230, 109, 0.5);
+            animation: moonCrecienteFloat 4.5s ease-in-out infinite;
+        }
+
+        @keyframes moonCrecienteFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            33% {
+                transform: translateY(-18px) rotate(-3deg) scale(1.03);
+            }
+            66% { 
+                transform: translateY(-10px) rotate(3deg) scale(1.01);
+            }
+        }
+
+        .moon-cuarto-creciente::before {
+            background: 
+                radial-gradient(circle at 70% 30%, rgba(180, 150, 80, 0.6) 0%, transparent 6%),
+                radial-gradient(circle at 80% 60%, rgba(170, 140, 70, 0.5) 0%, transparent 5%),
+                radial-gradient(circle at 65% 75%, rgba(175, 145, 75, 0.4) 0%, transparent 7%);
+        }
+
+        .moon-llena {
+            background: radial-gradient(circle at 35% 35%, #FFFACD, #FFE66D, #D4AF37);
+            box-shadow: 
+                inset -25px -25px 60px rgba(0, 0, 0, 0.2),
+                0 0 100px rgba(255, 230, 109, 1),
+                0 0 150px rgba(255, 230, 109, 0.8),
+                0 0 200px rgba(255, 230, 109, 0.5),
+                0 0 250px rgba(255, 230, 109, 0.3);
+            animation: moonFullFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes moonFullFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1) rotate(0deg);
+                box-shadow: 
+                    inset -25px -25px 60px rgba(0, 0, 0, 0.2),
+                    0 0 100px rgba(255, 230, 109, 1),
+                    0 0 150px rgba(255, 230, 109, 0.8),
+                    0 0 200px rgba(255, 230, 109, 0.5);
+            }
+            50% { 
+                transform: translateY(-30px) scale(1.08) rotate(5deg);
+                box-shadow: 
+                    inset -25px -25px 60px rgba(0, 0, 0, 0.2),
+                    0 0 120px rgba(255, 230, 109, 1),
+                    0 0 180px rgba(255, 230, 109, 0.9),
+                    0 0 240px rgba(255, 230, 109, 0.6);
+            }
+        }
+
+        .moon-cuarto-menguante {
+            background: linear-gradient(270deg, 
+                #1a1a1a 0%, 
+                #1a1a1a 50%, 
+                #FFE66D 50%, 
+                #D4AF37 100%);
+            box-shadow: 
+                inset 30px 0 60px rgba(0, 0, 0, 0.6),
+                0 0 80px rgba(255, 230, 109, 0.8),
+                0 0 120px rgba(255, 230, 109, 0.5);
+            animation: moonMenguanteFloat 4.5s ease-in-out infinite;
+        }
+
+        @keyframes moonMenguanteFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            33% {
+                transform: translateY(-18px) rotate(3deg) scale(1.03);
+            }
+            66% { 
+                transform: translateY(-10px) rotate(-3deg) scale(1.01);
+            }
+        }
+
+        .moon-cuarto-menguante::before {
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(180, 150, 80, 0.6) 0%, transparent 8%),
+                radial-gradient(circle at 20% 80%, rgba(175, 145, 75, 0.4) 0%, transparent 7%),
+                radial-gradient(circle at 35% 65%, rgba(170, 140, 70, 0.5) 0%, transparent 6%);
+        }
+
+        .phase-info {
+            background: linear-gradient(135deg, rgba(75, 0, 130, 0.5), rgba(138, 43, 226, 0.5));
+            border: 4px solid #FFE66D;
+            border-radius: 30px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 900px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 50px rgba(255, 230, 109, 0.4);
+        }
+
+        .phase-name {
+            font-size: 3em;
+            color: #FFE66D;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 230, 109, 0.9);
+        }
+
+        .phase-description {
+            font-size: 1.8em;
+            text-align: center;
+            line-height: 1.8;
+            color: #FFF9A6;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .intro-animation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .intro-moon {
+            width: 350px;
+            height: 350px;
+        }
+
+        .intro-text {
+            font-size: 2.2em;
+            text-align: center;
+            max-width: 900px;
+            line-height: 1.6;
+            color: #FFF9A6;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+            animation: textFade 2s ease-in;
+        }
+
+        @keyframes textFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.4), rgba(138, 43, 226, 0.4));
+            border: 4px solid #FFE66D;
+            border-radius: 25px;
+            padding: 35px;
+            margin: 40px auto;
+            max-width: 1000px;
+            font-size: 2.2em;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(255, 230, 109, 0.4);
+            animation: questionPulse 3s ease-in-out infinite;
+            color: #FFF9A6;
+        }
+
+        @keyframes questionPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .observations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 50px 0;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .observation-card {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(138, 43, 226, 0.3));
+            border: 3px solid #FFE66D;
+            border-radius: 20px;
+            padding: 30px;
+            font-size: 1.6em;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(255, 230, 109, 0.3);
+            color: #FFF9A6;
+        }
+
+        .observation-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 0 50px rgba(255, 230, 109, 0.6);
+            border-color: #FFFACD;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 25px;
+            border-radius: 60px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            padding: 18px 45px;
+            font-size: 1.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFE66D, #FFA500);
+            color: #1a0033;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 25px rgba(255, 230, 109, 0.5);
+            text-shadow: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 230, 109, 0.8);
+            background: linear-gradient(135deg, #FFFACD, #FFE66D);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 1.8em;
+            background: rgba(75, 0, 130, 0.7);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 3px solid #FFE66D;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(255, 230, 109, 0.4);
+            z-index: 100;
+            color: #FFE66D;
+        }
+
+        .closing-message {
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(138, 43, 226, 0.4));
+            border: 4px solid #FFE66D;
+            border-radius: 30px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 1000px;
+            font-size: 2em;
+            text-align: center;
+            line-height: 1.8;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 50px rgba(255, 230, 109, 0.5);
+            color: #FFF9A6;
+        }
+
+        strong {
+            color: #FFFACD;
+            font-size: 1.2em;
+            text-shadow: 0 0 10px rgba(255, 250, 205, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="space-background"></div>
+    <div class="space-objects">
+        <div class="planet planet1"></div>
+        <div class="planet planet2"></div>
+        <div class="nebula"></div>
+    </div>
+
+    <div class="container">
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">7</span>
+        </div>
+
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <h1>🚀 VIAJE A LA LUNA 🌙</h1>
+            <div class="subtitle">Descubre las 4 Fases Lunares</div>
+            <div class="intro-animation">
+                <div class="moon-3d intro-moon moon-llena"></div>
+                <div class="intro-text">
+                    ¡Prepárate para un viaje increíble! Vamos a explorar cómo cambia la Luna en el cielo nocturno
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Activación de saberes previos -->
+        <div class="slide">
+            <h2>🔭 ¿Qué sabemos de la Luna?</h2>
+            <div class="question-box">
+                💭 ¿Alguna vez has observado la Luna en diferentes noches?<br>
+                ¿Siempre se ve igual?
+            </div>
+            <div class="observations-grid">
+                <div class="observation-card">
+                    🌑 <strong>A veces</strong><br>no podemos verla
+                </div>
+                <div class="observation-card">
+                    🌓 <strong>Otras veces</strong><br>parece cortada por la mitad
+                </div>
+                <div class="observation-card">
+                    🌕 <strong>Algunas noches</strong><br>brilla completamente redonda
+                </div>
+                <div class="observation-card">
+                    ✨ <strong>Y siempre</strong><br>está cambiando su forma
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Luna Nueva -->
+        <div class="slide">
+            <h2>🌑 LUNA NUEVA</h2>
+            <div class="moon-phase-container">
+                <div class="moon-3d moon-nueva"></div>
+            </div>
+            <div class="phase-info">
+                <div class="phase-name">Primera Fase</div>
+                <div class="phase-description">
+                    La Luna está entre la Tierra y el Sol.<br><br>
+                    <strong>No podemos verla</strong> porque la parte iluminada está del otro lado.<br><br>
+                    El cielo nocturno se ve muy oscuro 🌌
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Cuarto Creciente -->
+        <div class="slide">
+            <h2>🌓 CUARTO CRECIENTE</h2>
+            <div class="moon-phase-container">
+                <div class="moon-3d moon-cuarto-creciente"></div>
+            </div>
+            <div class="phase-info">
+                <div class="phase-name">Segunda Fase</div>
+                <div class="phase-description">
+                    Vemos <strong>la mitad de la Luna</strong> iluminada.<br><br>
+                    Parece una letra "D" en el cielo 📐<br><br>
+                    La Luna está "creciendo" cada noche
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Luna Llena -->
+        <div class="slide">
+            <h2>🌕 LUNA LLENA</h2>
+            <div class="moon-phase-container">
+                <div class="moon-3d moon-llena"></div>
+            </div>
+            <div class="phase-info">
+                <div class="phase-name">Tercera Fase</div>
+                <div class="phase-description">
+                    ¡La Luna brilla completamente! ✨<br><br>
+                    Vemos <strong>toda su cara iluminada</strong> por el Sol.<br><br>
+                    Es la fase más brillante y hermosa 🌟
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Cuarto Menguante -->
+        <div class="slide">
+            <h2>🌗 CUARTO MENGUANTE</h2>
+            <div class="moon-phase-container">
+                <div class="moon-3d moon-cuarto-menguante"></div>
+            </div>
+            <div class="phase-info">
+                <div class="phase-name">Cuarta Fase</div>
+                <div class="phase-description">
+                    Otra vez vemos <strong>la mitad de la Luna</strong>.<br><br>
+                    Ahora parece una letra "C" en el cielo 🌜<br><br>
+                    La Luna está "menguando" hasta desaparecer
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Cierre -->
+        <div class="slide">
+            <h2>🌟 ¡Misión Cumplida! 🌟</h2>
+            <div class="closing-message">
+                <strong>Recuerda:</strong><br><br>
+                🌑 Luna Nueva - No la vemos<br><br>
+                🌓 Cuarto Creciente - Mitad iluminada (letra D)<br><br>
+                🌕 Luna Llena - Completamente brillante<br><br>
+                🌗 Cuarto Menguante - Mitad iluminada (letra C)<br><br>
+            </div>
+            <div class="question-box">
+                🔭 ¡Ahora eres un explorador lunar!<br>
+                ¿Qué fase observarás esta noche?
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅ Anterior</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente ➡</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) changeSlide(-1);
+            if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) changeSlide(1);
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>
